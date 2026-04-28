@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyMAUIApp1.Views.ProfilePage"
+             Title="Profile"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource OffBlack}}">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="14">
+            <VerticalStackLayout IsVisible="{Binding IsAuthenticated}" Spacing="8">
+                <Label Text="Profile" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <Label Text="{Binding UserName}" FontSize="22" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" FontAttributes="Bold" />
+                <Label Text="{Binding Email}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Text="Favorites" Command="{Binding NavigateToFavoritesCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                    <Button Grid.Column="1" Text="Settings" Command="{Binding NavigateToSettingsCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                </Grid>
+                <Button Text="Logout" Command="{Binding LogoutCommand}" BackgroundColor="{AppThemeBinding Light={StaticResource Magenta}, Dark={StaticResource Gray950}}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+
+                <Label Text="Recent Visits" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding RecentVisits}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 14" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource Gray900}}" BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevated}, Dark={StaticResource Black}}" Padding="10" Margin="0,0,0,8">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding StoreName}" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                                    <Label Text="{Binding Rating, StringFormat='Rating: {0}/5'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                                    <Label Text="{Binding Comment}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                                    <Label Text="{Binding VisitedAtUtc, StringFormat='Visited: {0:g} UTC'}" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout IsVisible="{Binding IsAuthenticated, Converter={StaticResource InverseBoolConverter}}" Spacing="12">
+                <Label Text="You are browsing as a guest." FontSize="16" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                <Label Text="Sign in to see your account, favorites and recent visits." FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                    <Button Text="Login" Command="{Binding NavigateToLoginCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                    <Button Grid.Column="1" Text="Sign Up" Command="{Binding NavigateToSignUpCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                </Grid>
+            </VerticalStackLayout>
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+            <Label Text="{Binding StatusMessage}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

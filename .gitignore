@@ -1,0 +1,45 @@
+# Build outputs
+bin/
+obj/
+**/bin/
+**/obj/
+
+# Visual Studio / IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.csproj.user
+
+# Rider / ReSharper
+.idea/
+*.sln.iml
+
+# MAUI / mobile build artifacts
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.apk
+*.aab
+*.ipa
+*.maui*
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Coverage and test artifacts
+TestResults/
+coverage/
+
+# Secret or environment files
+.env
+*.secrets

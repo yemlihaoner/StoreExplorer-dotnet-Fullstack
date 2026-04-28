@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyMAUIApp1.Views.StoreDetailPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource OffBlack}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="12">
+            <Label Text="{Binding Store.Name}" FontSize="24" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+            <Label Text="{Binding Store.Location.Address}" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+            <Label Text="{Binding Store.Description}" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" LineBreakMode="WordWrap" />
+                <Button Text="{Binding FavoriteButtonText}"
+                    Command="{Binding ToggleFavoriteCommand}"
+                    BackgroundColor="{StaticResource SecondaryBrush}"
+                    TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+
+            <Label Text="Menu" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Menu}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="*,Auto" Padding="0,6">
+                            <VerticalStackLayout Spacing="2">
+                                <Label Text="{Binding Name}" FontSize="14" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                                <Label Text="{Binding Description}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding Price, StringFormat='${0:0.00}'}" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" VerticalOptions="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <Label Text="Reviews" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding Reviews}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="RoundRectangle 12" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource Gray900}}" BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevated}, Dark={StaticResource Black}}" Padding="10" Margin="0,0,0,8">
+                            <VerticalStackLayout Spacing="4">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Text="{Binding Author}" FontSize="13" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                                    <Label Grid.Column="1" Text="{Binding Rating, StringFormat='{0}/5'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                                </Grid>
+                                <Label Text="{Binding Comment}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding VisitDate, StringFormat='Visited on {0:MMM d, yyyy}'}" FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Review input area -->
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding CanLeaveReview}">
+                <Label Text="Leave a Review" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Label Text="Rating" VerticalOptions="Center" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                    <HorizontalStackLayout Grid.Column="1" Spacing="4" HorizontalOptions="Start" VerticalOptions="Center">
+                        <Button Text="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=1}" Command="{Binding SetRatingCommand}" CommandParameter="1" BackgroundColor="Transparent" TextColor="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=1}" FontSize="22" Padding="0" CornerRadius="0" MinimumHeightRequest="44" MinimumWidthRequest="44" />
+                        <Button Text="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=2}" Command="{Binding SetRatingCommand}" CommandParameter="2" BackgroundColor="Transparent" TextColor="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=2}" FontSize="22" Padding="0" CornerRadius="0" MinimumHeightRequest="44" MinimumWidthRequest="44" />
+                        <Button Text="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=3}" Command="{Binding SetRatingCommand}" CommandParameter="3" BackgroundColor="Transparent" TextColor="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=3}" FontSize="22" Padding="0" CornerRadius="0" MinimumHeightRequest="44" MinimumWidthRequest="44" />
+                        <Button Text="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=4}" Command="{Binding SetRatingCommand}" CommandParameter="4" BackgroundColor="Transparent" TextColor="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=4}" FontSize="22" Padding="0" CornerRadius="0" MinimumHeightRequest="44" MinimumWidthRequest="44" />
+                        <Button Text="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=5}" Command="{Binding SetRatingCommand}" CommandParameter="5" BackgroundColor="Transparent" TextColor="{Binding Rating, Converter={StaticResource RatingStarConverter}, ConverterParameter=5}" FontSize="22" Padding="0" CornerRadius="0" MinimumHeightRequest="44" MinimumWidthRequest="44" />
+                    </HorizontalStackLayout>
+                </Grid>
+                <Label Text="{Binding Rating, StringFormat='Selected rating: {0}/5'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                <Editor Text="{Binding Comment, Mode=TwoWay}" Placeholder="Share your visit experience..." AutoSize="TextChanges" />
+                <Button Text="Submit review" Command="{Binding SubmitReviewCommand}" BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
+                <Label Text="{Binding ReviewStatusMessage}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6" IsVisible="{Binding HasExistingReview}">
+                <Label Text="{Binding ReviewGuardMessage}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="8" IsVisible="{Binding IsAuthenticated, Converter={StaticResource InverseBoolConverter}}">
+                <Label Text="Sign in to leave a review." TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+                <HorizontalStackLayout Spacing="8">
+                    <Button Text="Login" Command="{Binding NavigateToLoginCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                    <Button Text="Sign Up" Command="{Binding NavigateToSignUpCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

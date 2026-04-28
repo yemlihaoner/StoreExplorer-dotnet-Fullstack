@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyMAUIApp1.Views.MainPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Surface}, Dark={StaticResource OffBlack}}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+            <Border StrokeThickness="0" StrokeShape="RoundRectangle 28">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="{StaticResource Primary}" Offset="0" />
+                        <GradientStop Color="{StaticResource PrimaryDark}" Offset="1" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <VerticalStackLayout Padding="20" Spacing="8">
+                    <Label Text="Store Explorer" TextColor="White" FontSize="30" FontAttributes="Bold" />
+                    <Label Text="Backend data, nearest-store ranking, and store details in one MVVM page." TextColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray200}}" FontSize="14" />
+                    <Label Text="Select a store card to inspect menu and reviews." TextColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray200}}" FontSize="13" />
+
+                    <VerticalStackLayout Spacing="10" Margin="0,8,0,0" IsVisible="{Binding IsAuthenticated, Converter={StaticResource InverseBoolConverter}}">
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Text="Login" Command="{Binding LoginCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" FontSize="12" Padding="12,6" />
+                            <Button Grid.Column="1" Text="Sign Up" Command="{Binding SignUpCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" FontSize="12" Padding="12,6" />
+                        </Grid>
+
+                        <Button Text="Profile" Command="{Binding ProfileCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" FontSize="12" Padding="12,6" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="10" Margin="0,8,0,0" IsVisible="{Binding IsAuthenticated}">
+                        <Label Text="Signed in" TextColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray200}}" FontSize="12" />
+                        <Button Text="Profile" Command="{Binding ProfileCommand}" BackgroundColor="{StaticResource SecondaryBrush}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}" FontSize="12" Padding="12,6" />
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StrokeShape="RoundRectangle 24" BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevated}, Dark={StaticResource Black}}" StrokeThickness="1" Stroke="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource Gray900}}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Nearby Stores" FontSize="20" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                    <Label Text="{Binding StatusMessage}" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       HorizontalOptions="Center"
+                                       Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+
+                    <VerticalStackLayout BindableLayout.ItemsSource="{Binding NearbyStores}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeShape="RoundRectangle 20"
+                                        StrokeThickness="1"
+                                        Stroke="{AppThemeBinding Light={StaticResource Outline}, Dark={StaticResource Gray900}}"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource SurfaceElevated}, Dark={StaticResource Black}}"
+                                        Padding="14"
+                                        Margin="0,0,0,10">
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding BindingContext.OpenStoreCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" CommandParameter="{Binding}" />
+                                    </Border.GestureRecognizers>
+                                    <VerticalStackLayout Spacing="6">
+                                        <Label Text="{Binding Store.Name}" FontSize="16" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" LineBreakMode="TailTruncation" />
+                                        <Label Text="{Binding DistanceText}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+                                        <Label Text="{Binding Store.Location.Address}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" LineBreakMode="WordWrap" />
+                                        <Label Text="{Binding Store.Description}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" LineBreakMode="TailTruncation" MaxLines="2" />
+                                        <Button Text="{Binding FavoriteButtonText}"
+                                                FontSize="12"
+                                                BackgroundColor="{StaticResource SecondaryBrush}"
+                                                TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource White}}"
+                                            Command="{Binding BindingContext.ToggleFavoriteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                                CommandParameter="{Binding}" />
+                                    </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
+            </Border>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
