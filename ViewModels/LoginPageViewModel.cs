@@ -172,7 +172,10 @@ public sealed partial class LoginPageViewModel : ObservableObject
             var result = await authApi.LoginAsync(new LoginRequest(Email.Trim(), Password));
             if (result.IsSuccess)
             {
-                await Shell.Current.GoToAsync("..");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.GoToAsync("..");
+                }
             }
             else
             {
@@ -191,11 +194,17 @@ public sealed partial class LoginPageViewModel : ObservableObject
 
     private static async Task NavigateToSignUpAsync()
     {
-        await Shell.Current.GoToAsync(nameof(SignUpPage));
+        if (Shell.Current is not null)
+        {
+            await Shell.Current.GoToAsync(nameof(SignUpPage));
+        }
     }
 
     private static async Task NavigateToForgotPasswordAsync()
     {
-        await Shell.Current.GoToAsync(nameof(ForgotPasswordPage));
+        if (Shell.Current is not null)
+        {
+            await Shell.Current.GoToAsync(nameof(ForgotPasswordPage));
+        }
     }
 }

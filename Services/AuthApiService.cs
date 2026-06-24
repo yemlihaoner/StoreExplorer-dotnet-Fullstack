@@ -18,6 +18,12 @@ public sealed class AuthApiService
         };
     }
 
+    public AuthApiService(AuthSession authSession, HttpClient httpClient)
+    {
+        this.authSession = authSession;
+        this.httpClient = httpClient;
+    }
+
     public async Task<(bool IsSuccess, string Message)> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.PostAsJsonAsync("api/auth/login", request, cancellationToken);

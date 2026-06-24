@@ -238,7 +238,10 @@ public sealed partial class SignUpPageViewModel : ObservableObject
             var result = await authApi.SignUpAsync(new SignUpRequest(Email.Trim(), UserName.Trim(), Password));
             if (result.IsSuccess)
             {
-                await Shell.Current.GoToAsync("..");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.GoToAsync("..");
+                }
             }
             else
             {

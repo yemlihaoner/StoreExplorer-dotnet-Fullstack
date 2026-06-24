@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -16,10 +17,24 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="Microsoft.Maui.Controls" />
+    <Using Include="Microsoft.Maui.Devices" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Backend\StoreExplorer.Backend.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Models\UserDtos.cs" Link="Linked\Models\UserDtos.cs" />
+    <Compile Include="..\Models\StoreDtos.cs" Link="Linked\Models\StoreDtos.cs" />
+    <Compile Include="..\Services\AuthApiService.cs" Link="Linked\Services\AuthApiService.cs" />
+    <Compile Include="..\Services\AuthSession.cs" Link="Linked\Services\AuthSession.cs" />
+    <Compile Include="..\Services\ApiConfiguration.cs" Link="Linked\Services\ApiConfiguration.cs" />
+    <Compile Include="..\Services\ServiceRegistry.cs" Link="Linked\Services\ServiceRegistry.cs" />
+    <Compile Include="..\ViewModels\LoginPageViewModel.cs" Link="Linked\ViewModels\LoginPageViewModel.cs" />
+    <Compile Include="..\ViewModels\SignUpPageViewModel.cs" Link="Linked\ViewModels\SignUpPageViewModel.cs" />
+    <Compile Include="..\ViewModels\ForgotPasswordPageViewModel.cs" Link="Linked\ViewModels\ForgotPasswordPageViewModel.cs" />
   </ItemGroup>
 
 </Project>

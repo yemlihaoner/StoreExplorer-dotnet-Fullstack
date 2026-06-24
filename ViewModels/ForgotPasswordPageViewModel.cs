@@ -235,7 +235,10 @@ public sealed partial class ForgotPasswordPageViewModel : ObservableObject
             var result = await authApi.ForgotPasswordAsync(new ForgotPasswordRequest(Email.Trim()));
             if (result.IsSuccess)
             {
-                await Shell.Current.DisplayAlert("Demo Mode Reset Code", $"Reset code generated: {result.Code}\n\nIn a production app, this code would be sent to your email.", "OK");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert("Demo Mode Reset Code", $"Reset code generated: {result.Code}\n\nIn a production app, this code would be sent to your email.", "OK");
+                }
                 IsCodeSent = true;
                 isValidationActive = false;
             }
@@ -276,8 +279,11 @@ public sealed partial class ForgotPasswordPageViewModel : ObservableObject
             var result = await authApi.ResetPasswordAsync(new ResetPasswordRequest(Email.Trim(), Code.Trim(), NewPassword));
             if (result.IsSuccess)
             {
-                await Shell.Current.DisplayAlert("Success", "Your password has been reset successfully. Please log in.", "OK");
-                await Shell.Current.GoToAsync("..");
+                if (Shell.Current is not null)
+                {
+                    await Shell.Current.DisplayAlert("Success", "Your password has been reset successfully. Please log in.", "OK");
+                    await Shell.Current.GoToAsync("..");
+                }
             }
             else
             {
