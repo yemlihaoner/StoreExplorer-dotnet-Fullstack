@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StoreExplorer.Views.SignUpPage"
@@ -9,13 +9,41 @@
             <Label Text="Create Account" FontSize="28" FontAttributes="Bold" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
             <Label Text="Use a strong password to keep your account secure." FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
 
-            <Entry Placeholder="Email" Keyboard="Email" Text="{Binding Email}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
-            <Entry Placeholder="Username" Text="{Binding UserName}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
-            <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+            <!-- General Error Banner -->
+            <Border IsVisible="{Binding HasGeneralError}"
+                    Padding="14,10"
+                    StrokeThickness="1"
+                    StrokeShape="RoundRectangle 8"
+                    Stroke="{AppThemeBinding Light=#EF5350, Dark=#EF5350}"
+                    BackgroundColor="{AppThemeBinding Light=#FFEBEE, Dark=#2C1A1D}">
+                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Label Text="⚠" FontSize="18" FontAttributes="Bold" TextColor="{AppThemeBinding Light=#C62828, Dark=#EF5350}" VerticalOptions="Center"/>
+                    <Label Text="{Binding GeneralError}" FontSize="13" LineBreakMode="WordWrap"
+                           TextColor="{AppThemeBinding Light=#C62828, Dark=#FFEBEE}" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Email Entry Field -->
+            <VerticalStackLayout Spacing="4">
+                <Entry Placeholder="Email" Keyboard="Email" Text="{Binding Email}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <Label Text="{Binding EmailError}" IsVisible="{Binding HasEmailError}" FontSize="12" TextColor="{AppThemeBinding Light=#D32F2F, Dark=#E57373}" Margin="4,0,0,0"/>
+            </VerticalStackLayout>
+
+            <!-- Username Entry Field -->
+            <VerticalStackLayout Spacing="4">
+                <Entry Placeholder="Username" Text="{Binding UserName}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <Label Text="{Binding UserNameError}" IsVisible="{Binding HasUserNameError}" FontSize="12" TextColor="{AppThemeBinding Light=#D32F2F, Dark=#E57373}" Margin="4,0,0,0"/>
+            </VerticalStackLayout>
+
+            <!-- Password Entry Field -->
+            <VerticalStackLayout Spacing="4">
+                <Entry Placeholder="Password" IsPassword="True" Text="{Binding Password}" TextColor="{AppThemeBinding Light={StaticResource PrimaryDarkText}, Dark={StaticResource White}}" />
+                <Label Text="{Binding PasswordError}" IsVisible="{Binding HasPasswordError}" FontSize="12" TextColor="{AppThemeBinding Light=#D32F2F, Dark=#E57373}" Margin="4,0,0,0" LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
 
             <Button Text="Sign Up" Command="{Binding SignUpCommand}" BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource PrimaryDarkText}}" />
             <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-            <Label Text="{Binding StatusMessage}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
+            <Label Text="{Binding StatusMessage}" IsVisible="{Binding HasGeneralError, Converter={StaticResource InverseBoolConverter}}" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray200}}" />
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

@@ -1,4 +1,4 @@
-﻿namespace StoreExplorer.Backend.Models;
+namespace StoreExplorer.Backend.Models;
 
 public sealed record SignUpRequest(
     string Email,
@@ -40,3 +40,10 @@ public sealed record UserProfileDto(
     string UserName,
     IReadOnlyList<Guid> FavoriteStoreIds,
     IReadOnlyList<UserVisitDto> RecentVisits);
+
+public sealed record ForgotPasswordRequest(string Email);
+
+public sealed record ResetPasswordRequest(
+    string Email,
+    string Code,
+    string NewPassword);

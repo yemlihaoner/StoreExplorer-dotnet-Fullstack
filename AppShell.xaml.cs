@@ -1,4 +1,4 @@
-﻿namespace StoreExplorer;
+namespace StoreExplorer;
 
 using StoreExplorer.Views;
 
@@ -11,5 +11,6 @@ public partial class AppShell : Shell
 		Routing.RegisterRoute(nameof(SignUpPage), typeof(SignUpPage));
 		Routing.RegisterRoute(nameof(FavoritesPage), typeof(FavoritesPage));
 		Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
+		Routing.RegisterRoute(nameof(ForgotPasswordPage), typeof(ForgotPasswordPage));
 	}
 }

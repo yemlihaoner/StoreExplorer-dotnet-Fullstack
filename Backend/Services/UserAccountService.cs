@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Identity;
 using StoreExplorer.Backend.Models;
@@ -12,6 +12,7 @@ public sealed class UserAccountService
 
     private readonly ConcurrentDictionary<Guid, UserAccountRecord> usersById = new();
     private readonly ConcurrentDictionary<string, Guid> userIdByEmail = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, string> passwordResetCodes = new(StringComparer.OrdinalIgnoreCase);
     private readonly PasswordHasher<UserAccountRecord> passwordHasher = new();
 
     public (bool IsSuccess, string? Error, UserSummaryDto? User) TryCreateUser(SignUpRequest request)
@@ -172,6 +173,43 @@ public sealed class UserAccountService
         }
 
         user.PasswordHash = passwordHasher.HashPassword(user, request.NewPassword);
+        return true;
+    }
+
+    public (bool IsSuccess, string? Error, string? Code) InitiatePasswordReset(string emailRaw)
+    {
+        var email = NormalizeEmail(emailRaw);
+        if (string.IsNullOrWhiteSpace(email) || !userIdByEmail.ContainsKey(email))
+        {
+            return (false, "User with this email was not found.", null);
+        }
+
+        var rand = new Random();
+        var code = rand.Next(100000, 999999).ToString();
+        passwordResetCodes[email] = code;
+
+        return (true, null, code);
+    }
+
+    public bool TryResetPassword(string emailRaw, string code, string newPassword, out string? error)
+    {
+        error = null;
+        var email = NormalizeEmail(emailRaw);
+
+        if (string.IsNullOrWhiteSpace(email) || !userIdByEmail.TryGetValue(email, out var userId) || !usersById.TryGetValue(userId, out var user))
+        {
+            error = "User not found.";
+            return false;
+        }
+
+        if (!passwordResetCodes.TryGetValue(email, out var storedCode) || !string.Equals(storedCode, code, StringComparison.Ordinal))
+        {
+            error = "Invalid or expired reset code.";
+            return false;
+        }
+
+        user.PasswordHash = passwordHasher.HashPassword(user, newPassword);
+        passwordResetCodes.TryRemove(email, out _);
         return true;
     }
 

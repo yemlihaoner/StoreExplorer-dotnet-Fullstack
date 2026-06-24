@@ -5,25 +5,26 @@ using StoreExplorer.Services;
 
 namespace StoreExplorer.ViewModels;
 
-public sealed partial class SignUpPageViewModel : ObservableObject
+public sealed partial class ForgotPasswordPageViewModel : ObservableObject
 {
     private readonly AuthApiService authApi = ServiceRegistry.AuthApi;
 
     private string email = string.Empty;
-    private string userName = string.Empty;
-    private string password = string.Empty;
+    private string code = string.Empty;
+    private string newPassword = string.Empty;
     private bool isBusy;
-    private string statusMessage = "Create an account to save favorite stores.";
+    private bool isCodeSent;
 
     private string emailError = string.Empty;
-    private string userNameError = string.Empty;
+    private string codeError = string.Empty;
     private string passwordError = string.Empty;
     private string generalError = string.Empty;
     private bool isValidationActive;
 
-    public SignUpPageViewModel()
+    public ForgotPasswordPageViewModel()
     {
-        SignUpCommand = new AsyncRelayCommand(SignUpAsync);
+        RequestCodeCommand = new AsyncRelayCommand(RequestCodeAsync);
+        ResetPasswordCommand = new AsyncRelayCommand(ResetPasswordAsync);
     }
 
     public string Email
@@ -38,24 +39,24 @@ public sealed partial class SignUpPageViewModel : ObservableObject
         }
     }
 
-    public string UserName
+    public string Code
     {
-        get => userName;
+        get => code;
         set
         {
-            if (SetProperty(ref userName, value))
+            if (SetProperty(ref code, value))
             {
-                ValidateUserName();
+                ValidateCode();
             }
         }
     }
 
-    public string Password
+    public string NewPassword
     {
-        get => password;
+        get => newPassword;
         set
         {
-            if (SetProperty(ref password, value))
+            if (SetProperty(ref newPassword, value))
             {
                 ValidatePassword();
             }
@@ -68,10 +69,10 @@ public sealed partial class SignUpPageViewModel : ObservableObject
         set => SetProperty(ref isBusy, value);
     }
 
-    public string StatusMessage
+    public bool IsCodeSent
     {
-        get => statusMessage;
-        set => SetProperty(ref statusMessage, value);
+        get => isCodeSent;
+        set => SetProperty(ref isCodeSent, value);
     }
 
     public string EmailError
@@ -88,19 +89,19 @@ public sealed partial class SignUpPageViewModel : ObservableObject
 
     public bool HasEmailError => !string.IsNullOrWhiteSpace(EmailError);
 
-    public string UserNameError
+    public string CodeError
     {
-        get => userNameError;
+        get => codeError;
         set
         {
-            if (SetProperty(ref userNameError, value))
+            if (SetProperty(ref codeError, value))
             {
-                OnPropertyChanged(nameof(HasUserNameError));
+                OnPropertyChanged(nameof(HasCodeError));
             }
         }
     }
 
-    public bool HasUserNameError => !string.IsNullOrWhiteSpace(UserNameError);
+    public bool HasCodeError => !string.IsNullOrWhiteSpace(CodeError);
 
     public string PasswordError
     {
@@ -130,6 +131,9 @@ public sealed partial class SignUpPageViewModel : ObservableObject
 
     public bool HasGeneralError => !string.IsNullOrWhiteSpace(GeneralError);
 
+    public IAsyncRelayCommand RequestCodeCommand { get; }
+    public IAsyncRelayCommand ResetPasswordCommand { get; }
+
     private void ValidateEmail()
     {
         if (!isValidationActive) return;
@@ -154,17 +158,17 @@ public sealed partial class SignUpPageViewModel : ObservableObject
         EmailError = "Please enter a valid email address.";
     }
 
-    private void ValidateUserName()
+    private void ValidateCode()
     {
         if (!isValidationActive) return;
 
-        if (string.IsNullOrWhiteSpace(userName))
+        if (string.IsNullOrWhiteSpace(code))
         {
-            UserNameError = "Username is required.";
+            CodeError = "Verification code is required.";
         }
         else
         {
-            UserNameError = string.Empty;
+            CodeError = string.Empty;
         }
     }
 
@@ -172,30 +176,30 @@ public sealed partial class SignUpPageViewModel : ObservableObject
     {
         if (!isValidationActive) return;
 
-        if (string.IsNullOrEmpty(password))
+        if (string.IsNullOrEmpty(newPassword))
         {
-            PasswordError = "Password is required.";
+            PasswordError = "New password is required.";
             return;
         }
 
         var errors = new List<string>();
-        if (password.Length < 12)
+        if (newPassword.Length < 12)
         {
             errors.Add("at least 12 characters");
         }
-        if (!password.Any(char.IsUpper))
+        if (!newPassword.Any(char.IsUpper))
         {
             errors.Add("one uppercase letter");
         }
-        if (!password.Any(char.IsLower))
+        if (!newPassword.Any(char.IsLower))
         {
             errors.Add("one lowercase letter");
         }
-        if (!password.Any(char.IsDigit))
+        if (!newPassword.Any(char.IsDigit))
         {
             errors.Add("one digit");
         }
-        if (!password.Any(character => !char.IsLetterOrDigit(character)))
+        if (!newPassword.Any(character => !char.IsLetterOrDigit(character)))
         {
             errors.Add("one symbol");
         }
@@ -210,21 +214,55 @@ public sealed partial class SignUpPageViewModel : ObservableObject
         }
     }
 
-    public IAsyncRelayCommand SignUpCommand { get; }
-
-    public async Task SignUpAsync()
+    public async Task RequestCodeAsync()
     {
-        if (IsBusy)
-        {
-            return;
-        }
+        if (IsBusy) return;
 
         isValidationActive = true;
         ValidateEmail();
-        ValidateUserName();
+
+        if (HasEmailError)
+        {
+            GeneralError = "Please enter a valid email.";
+            return;
+        }
+
+        GeneralError = string.Empty;
+
+        try
+        {
+            IsBusy = true;
+            var result = await authApi.ForgotPasswordAsync(new ForgotPasswordRequest(Email.Trim()));
+            if (result.IsSuccess)
+            {
+                await Shell.Current.DisplayAlert("Demo Mode Reset Code", $"Reset code generated: {result.Code}\n\nIn a production app, this code would be sent to your email.", "OK");
+                IsCodeSent = true;
+                isValidationActive = false;
+            }
+            else
+            {
+                GeneralError = result.Message;
+            }
+        }
+        catch (Exception ex)
+        {
+            GeneralError = $"An unexpected error occurred: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    public async Task ResetPasswordAsync()
+    {
+        if (IsBusy) return;
+
+        isValidationActive = true;
+        ValidateCode();
         ValidatePassword();
 
-        if (HasEmailError || HasUserNameError || HasPasswordError)
+        if (HasCodeError || HasPasswordError)
         {
             GeneralError = "Please fix the validation errors below.";
             return;
@@ -235,9 +273,10 @@ public sealed partial class SignUpPageViewModel : ObservableObject
         try
         {
             IsBusy = true;
-            var result = await authApi.SignUpAsync(new SignUpRequest(Email.Trim(), UserName.Trim(), Password));
+            var result = await authApi.ResetPasswordAsync(new ResetPasswordRequest(Email.Trim(), Code.Trim(), NewPassword));
             if (result.IsSuccess)
             {
+                await Shell.Current.DisplayAlert("Success", "Your password has been reset successfully. Please log in.", "OK");
                 await Shell.Current.GoToAsync("..");
             }
             else

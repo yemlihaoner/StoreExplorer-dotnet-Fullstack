@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -133,6 +133,32 @@ app.MapPost("/api/auth/login", (LoginRequest request, UserAccountService account
     var token = CreateAuthResponse(result.User, signingKey);
     return Results.Ok(token);
 }).RequireRateLimiting("auth");
+
+app.MapPost("/api/auth/forgot-password", (ForgotPasswordRequest request, UserAccountService accounts) =>
+{
+    var result = accounts.InitiatePasswordReset(request.Email);
+    if (!result.IsSuccess)
+    {
+        return Results.NotFound(new { error = result.Error });
+    }
+    return Results.Ok(new { message = "Reset code generated for demo mode.", code = result.Code });
+});
+
+app.MapPost("/api/auth/reset-password", (ResetPasswordRequest request, UserAccountService accounts) =>
+{
+    var passwordErrors = UserAccountService.ValidatePassword(request.NewPassword);
+    if (passwordErrors.Count > 0)
+    {
+        return Results.BadRequest(new { errors = passwordErrors });
+    }
+
+    if (!accounts.TryResetPassword(request.Email, request.Code, request.NewPassword, out var error))
+    {
+        return Results.BadRequest(new { error = error });
+    }
+
+    return Results.Ok(new { message = "Password has been reset successfully." });
+});
 
 app.MapGet("/api/users/me", (ClaimsPrincipal principal, UserAccountService accounts) =>
 {
