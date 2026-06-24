@@ -1,9 +1,9 @@
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text.Json;
-using MyMAUIApp1.Models;
+using StoreExplorer.Models;
 
-namespace MyMAUIApp1.Services;
+namespace StoreExplorer.Services;
 
 public sealed class StoreApiService
 {

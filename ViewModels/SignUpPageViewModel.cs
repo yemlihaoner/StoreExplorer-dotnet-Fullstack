@@ -1,9 +1,9 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MyMAUIApp1.Models;
-using MyMAUIApp1.Services;
+using StoreExplorer.Models;
+using StoreExplorer.Services;
 
-namespace MyMAUIApp1.ViewModels;
+namespace StoreExplorer.ViewModels;
 
 public sealed partial class SignUpPageViewModel : ObservableObject
 {

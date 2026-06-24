@@ -1,6 +1,6 @@
-using MyMAUIApp1.Models;
+﻿using StoreExplorer.Models;
 
-namespace MyMAUIApp1.Services;
+namespace StoreExplorer.Services;
 
 public sealed class AuthSession
 {

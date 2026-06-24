@@ -21,19 +21,56 @@ A .NET MAUI sample app with MVVM architecture, theme support, favorites, reviews
 
 ## Requirements
 
-- .NET 10 SDK
-- Visual Studio 2022 with .NET MAUI workload, or VS Code with the MAUI tooling installed
-- Platform SDKs for the targets you plan to run
+- **.NET 10 SDK**
+- **IDE**: [VS Code](https://code.visualstudio.com/) or Visual Studio 2022
+- **VS Code Extensions**:
+  - [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit) (highly recommended for solution navigation and debugger support)
+  - [.NET MAUI](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-maui) (for debugging on Android, iOS, and MacCatalyst)
+- Platform SDKs for the targets you plan to run (e.g., Windows SDK, Android SDK)
 
-## Build
+## Running the Application from VS Code
 
+We have preconfigured launch settings in `.vscode/launch.json` and tasks in `.vscode/tasks.json`. You can easily run and debug the projects from VS Code's **Run and Debug** view (`Ctrl+Shift+D`):
+
+1. **Launch Backend + MAUI App (Universal/MAUI)** (Recommended for macOS & Cross-Platform):
+   - Launches the API backend and starts the MAUI app using the active target framework you select.
+   - **For macOS Users**: Set your active target device in the VS Code status bar/device selector to **MacCatalyst** (or **iOS Simulator** / **Android Emulator**) and launch this compound configuration. Both the backend API and the client app will run concurrently under the debuggers.
+2. **Launch Backend + MAUI App (Windows)** (Recommended for Windows Users):
+   - Launches the API backend and the MAUI Windows desktop application simultaneously with a single click.
+3. **Backend (.NET Core)**: Runs/debugs only the ASP.NET Core minimal API backend.
+4. **MAUI App (Windows)**: Runs/debugs only the client app targeting Windows desktop.
+5. **.NET MAUI: App (All Platforms)**: Runs/debugs the client app on your selected platform target (Android, iOS, macOS Catalyst, Windows) using the official .NET MAUI extension.
+
+
+## Running the Application from CLI
+
+You can also run both the backend and the app using the `dotnet` CLI.
+
+### 1. Run the Backend API
 ```powershell
-dotnet build MyMAUIApp1.csproj -f net10.0-windows10.0.19041.0 -p:UseAppHost=false
+dotnet run --project Backend/StoreExplorer.Backend.csproj
 ```
+The API will start listening on `http://localhost:5271`.
 
-## Run
+### 2. Run the MAUI Client App
+Run the app targeting your preferred platform:
+- **Windows**:
+  ```powershell
+  dotnet run --project StoreExplorer.csproj -f net10.0-windows10.0.19041.0
+  ```
+- **Android**:
+  ```powershell
+  dotnet run --project StoreExplorer.csproj -f net10.0-android
+  ```
+- **macOS (Catalyst)**:
+  ```powershell
+  dotnet run --project StoreExplorer.csproj -f net10.0-maccatalyst
+  ```
+- **iOS**:
+  ```powershell
+  dotnet run --project StoreExplorer.csproj -f net10.0-ios
+  ```
 
-Open the solution in Visual Studio and choose the target platform, or run the desired target from the command line once the platform SDK is installed.
 
 ## Notes
 

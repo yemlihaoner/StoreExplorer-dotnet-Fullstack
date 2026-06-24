@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace MyMAUIApp1;
+namespace StoreExplorer;
 
 public partial class App : Application
 {

@@ -1,4 +1,4 @@
-namespace MyMAUIApp1.Services;
+﻿namespace StoreExplorer.Services;
 
 public static class ServiceRegistry
 {

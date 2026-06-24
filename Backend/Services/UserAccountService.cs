@@ -1,9 +1,9 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Net.Mail;
 using Microsoft.AspNetCore.Identity;
-using MyMAUIApp1.Backend.Models;
+using StoreExplorer.Backend.Models;
 
-namespace MyMAUIApp1.Backend.Services;
+namespace StoreExplorer.Backend.Services;
 
 public sealed class UserAccountService
 {

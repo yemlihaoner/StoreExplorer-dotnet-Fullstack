@@ -1,6 +1,6 @@
-﻿namespace MyMAUIApp1;
+﻿namespace StoreExplorer;
 
-using MyMAUIApp1.Views;
+using StoreExplorer.Views;
 
 public partial class AppShell : Shell
 {

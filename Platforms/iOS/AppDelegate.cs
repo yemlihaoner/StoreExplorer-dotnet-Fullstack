@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace MyMAUIApp1;
+namespace StoreExplorer;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

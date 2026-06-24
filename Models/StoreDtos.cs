@@ -1,4 +1,4 @@
-namespace MyMAUIApp1.Models;
+﻿namespace StoreExplorer.Models;
 
 public sealed record StoreDto(
     Guid Id,

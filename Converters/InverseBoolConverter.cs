@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Globalization;
 using Microsoft.Maui.Controls;
 
-namespace MyMAUIApp1.Converters;
+namespace StoreExplorer.Converters;
 
 public class InverseBoolConverter : IValueConverter
 {

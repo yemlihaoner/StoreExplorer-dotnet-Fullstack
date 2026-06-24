@@ -1,7 +1,7 @@
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Maui.Devices.Sensors;
 
-namespace MyMAUIApp1.Models;
+namespace StoreExplorer.Models;
 
 public sealed partial class StoreMapItem : ObservableObject
 {

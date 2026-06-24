@@ -1,6 +1,6 @@
-using MyMAUIApp1.ViewModels;
+﻿using StoreExplorer.ViewModels;
 
-namespace MyMAUIApp1.Views;
+namespace StoreExplorer.Views;
 
 public partial class MainPage : ContentPage
 {

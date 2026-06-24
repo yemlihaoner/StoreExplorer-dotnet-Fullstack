@@ -1,4 +1,4 @@
-namespace MyMAUIApp1.Backend.Models;
+﻿namespace StoreExplorer.Backend.Models;
 
 public sealed record SignUpRequest(
     string Email,

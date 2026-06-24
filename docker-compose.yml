@@ -1,6 +1,6 @@
-services:
+﻿services:
   stores-api:
-    container_name: mymauiapp1-backend
+    container_name: StoreExplorer-backend
     build:
       context: .
       dockerfile: Backend/Dockerfile

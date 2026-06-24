@@ -1,13 +1,13 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
-using MyMAUIApp1.Backend.Data;
-using MyMAUIApp1.Backend.Models;
-using MyMAUIApp1.Backend.Services;
+using StoreExplorer.Backend.Data;
+using StoreExplorer.Backend.Models;
+using StoreExplorer.Backend.Services;
 using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,8 +63,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "MyMAUIApp1.Backend",
-            ValidAudience = "MyMAUIApp1.Client",
+            ValidIssuer = "StoreExplorer.Backend",
+            ValidAudience = "StoreExplorer.Client",
             IssuerSigningKey = tokenSigningKey,
             ClockSkew = TimeSpan.FromMinutes(2)
         };
@@ -282,8 +282,8 @@ static AuthResponse CreateAuthResponse(UserSummaryDto user, SymmetricSecurityKey
 
     var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
     var jwt = new JwtSecurityToken(
-        issuer: "MyMAUIApp1.Backend",
-        audience: "MyMAUIApp1.Client",
+        issuer: "StoreExplorer.Backend",
+        audience: "StoreExplorer.Client",
         claims: claims,
         expires: expiresAtUtc.UtcDateTime,
         signingCredentials: credentials);

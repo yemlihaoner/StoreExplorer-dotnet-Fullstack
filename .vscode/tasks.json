@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-backend",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Backend/StoreExplorer.Backend.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-app-windows",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/StoreExplorer.csproj",
+                "-f",
+                "net10.0-windows10.0.19041.0"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-app",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/StoreExplorer.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

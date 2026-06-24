@@ -1,8 +1,8 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Graphics;
 
-namespace MyMAUIApp1.Converters;
+namespace StoreExplorer.Converters;
 
 public sealed class RatingStarConverter : IValueConverter
 {

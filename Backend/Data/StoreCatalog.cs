@@ -1,7 +1,7 @@
-using MyMAUIApp1.Backend.Models;
+﻿using StoreExplorer.Backend.Models;
 using System.Collections.Concurrent;
 
-namespace MyMAUIApp1.Backend.Data;
+namespace StoreExplorer.Backend.Data;
 
 public static class StoreCatalog
 {

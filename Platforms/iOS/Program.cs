@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace MyMAUIApp1;
+namespace StoreExplorer;
 
 public class Program
 {
