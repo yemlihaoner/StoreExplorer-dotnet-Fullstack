@@ -72,6 +72,26 @@ Run the app targeting your preferred platform:
   ```
 
 
+## CI/CD, Tests & Push Validation
+
+To ensure only successfully compiling and tested code is pushed to your remote repository, we have set up two guards:
+
+### 1. GitHub Actions Pipeline (Remote Validation)
+A build pipeline is configured in [.github/workflows/build.yml](file:///C:/Development/MAUI/MyMAUIApp1/.github/workflows/build.yml). On every `push` and `pull_request` to the main branches, the workflow executes:
+* **Linux Runner**: Automatically restores, runs the xUnit test suite (14 tests covering Login, Password Reset, duplicate registrations, and Favorites validation), and verifies the compiling of the Backend API.
+* **Windows Runner**: Automatically restores, installs the required .NET MAUI workloads, and verifies compiling of the client app targeting the Windows platform.
+
+### 2. Local Push Guard (Git Pre-Push Hook)
+To prevent pushing failing code, a Git pre-push hook script is stored in the committed [.githooks/pre-push](file:///C:/Development/MAUI/MyMAUIApp1/.githooks/pre-push) folder.
+
+This hook is configured **automatically** for all developers. The build system in `StoreExplorer.csproj` automatically registers this folder with Git (`git config core.hooksPath .githooks`) whenever the project is built.
+
+Once configured, running `git push` automatically:
+1. Runs the xUnit test suite (implicitly validating Backend compilation).
+2. Verifies client compilation targeting Windows.
+If any tests or builds fail, the push is aborted.
+
+
 ## Notes
 
 - The app uses a shared semantic color palette in `Resources/Styles`.

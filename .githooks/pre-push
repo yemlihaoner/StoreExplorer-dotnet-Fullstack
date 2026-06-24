@@ -1,0 +1,25 @@
+#!/bin/sh
+echo "=== Running pre-push validation ==="
+
+# 1. Run Unit Tests (Implicitly builds the Backend API)
+echo "Running Unit Tests..."
+dotnet test StoreExplorer.Tests/StoreExplorer.Tests.csproj --configuration Release
+test_status=$?
+
+if [ $test_status -ne 0 ]; then
+    echo "Error: Unit tests failed. Push aborted."
+    exit 1
+fi
+
+# 2. Build Client App
+echo "Building Client (Windows target)..."
+dotnet build StoreExplorer.csproj -f net10.0-windows10.0.19041.0 --configuration Release
+client_status=$?
+
+if [ $client_status -ne 0 ]; then
+    echo "Error: Client App build failed. Push aborted."
+    exit 1
+fi
+
+echo "=== Validation succeeded. Commencing push... ==="
+exit 0

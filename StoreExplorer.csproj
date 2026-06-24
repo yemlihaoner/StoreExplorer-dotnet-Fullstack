@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android</TargetFrameworks>
@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 		<Compile Remove="Backend\**\*.cs" />
+		<Compile Remove="StoreExplorer.Tests\**\*.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -75,5 +76,9 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 	</ItemGroup>
+
+	<Target Name="ConfigureGitHooks" BeforeTargets="Build" Condition="Exists('.git')">
+		<Exec Command="git config core.hooksPath .githooks" ContinueOnError="true" />
+	</Target>
 
 </Project>
