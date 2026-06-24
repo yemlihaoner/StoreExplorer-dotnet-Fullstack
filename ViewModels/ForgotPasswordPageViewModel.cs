@@ -237,7 +237,7 @@ public sealed partial class ForgotPasswordPageViewModel : ObservableObject
             {
                 if (Shell.Current is not null)
                 {
-                    await Shell.Current.DisplayAlert("Demo Mode Reset Code", $"Reset code generated: {result.Code}\n\nIn a production app, this code would be sent to your email.", "OK");
+                    await Shell.Current.DisplayAlertAsync("Demo Mode Reset Code", $"Reset code generated: {result.Code}\n\nIn a production app, this code would be sent to your email.", "OK");
                 }
                 IsCodeSent = true;
                 isValidationActive = false;
@@ -281,7 +281,7 @@ public sealed partial class ForgotPasswordPageViewModel : ObservableObject
             {
                 if (Shell.Current is not null)
                 {
-                    await Shell.Current.DisplayAlert("Success", "Your password has been reset successfully. Please log in.", "OK");
+                    await Shell.Current.DisplayAlertAsync("Success", "Your password has been reset successfully. Please log in.", "OK");
                     await Shell.Current.GoToAsync("..");
                 }
             }

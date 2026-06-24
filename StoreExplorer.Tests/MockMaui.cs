@@ -11,7 +11,7 @@ namespace Microsoft.Maui.Controls
             return Task.CompletedTask;
         }
         
-        public Task DisplayAlert(string title, string message, string cancel)
+        public Task DisplayAlertAsync(string title, string message, string cancel)
         {
             return Task.CompletedTask;
         }

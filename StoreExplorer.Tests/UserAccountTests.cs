@@ -144,6 +144,7 @@ public class UserAccountTests
         // Arrange
         var signUp = new SignUpRequest("fav@example.com", "favuser", "StrongPassword123!");
         var userResult = _accountService.TryCreateUser(signUp);
+        Assert.NotNull(userResult.User);
         var userId = userResult.User.Id;
         var storeId = System.Guid.NewGuid();
 

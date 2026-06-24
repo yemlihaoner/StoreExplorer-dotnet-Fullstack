@@ -117,8 +117,8 @@ public sealed class AuthApiService
                     }
                 }
             }
-            catch {}
-            
+            catch { }
+
             if (response.StatusCode == HttpStatusCode.NotFound)
             {
                 return (false, "A user with this email was not found.", null);
@@ -150,7 +150,7 @@ public sealed class AuthApiService
                     }
                 }
             }
-            catch {}
+            catch { }
             return (false, $"Password reset failed ({(int)response.StatusCode}).");
         }
 

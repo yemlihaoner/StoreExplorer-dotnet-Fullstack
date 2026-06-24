@@ -1,7 +1,19 @@
 #!/bin/sh
 echo "=== Running pre-push validation ==="
 
-# 1. Run Unit Tests (Implicitly builds the Backend API)
+# 1. Verify Code Formatting and Standards
+echo "Verifying Code Formatting and Standards..."
+dotnet format Backend/StoreExplorer.Backend.csproj --no-restore --verify-no-changes
+backend_format_status=$?
+dotnet format StoreExplorer.csproj --no-restore --verify-no-changes
+client_format_status=$?
+
+if [ $backend_format_status -ne 0 ] || [ $client_format_status -ne 0 ]; then
+    echo "Error: Code formatting or standard checks failed. Please run 'dotnet format' to fix them automatically. Push aborted."
+    exit 1
+fi
+
+# 2. Run Unit Tests (Implicitly builds the Backend API)
 echo "Running Unit Tests..."
 dotnet test StoreExplorer.Tests/StoreExplorer.Tests.csproj --configuration Release
 test_status=$?
@@ -11,9 +23,14 @@ if [ $test_status -ne 0 ]; then
     exit 1
 fi
 
-# 2. Build Client App
-echo "Building Client (Windows target)..."
-dotnet build StoreExplorer.csproj -f net10.0-windows10.0.19041.0 --configuration Release
+# 3. Build Client App
+if [ "$(uname)" = "Darwin" ]; then
+    echo "Building Client (MacCatalyst target)..."
+    dotnet build StoreExplorer.csproj -f net10.0-maccatalyst -p:TargetFrameworkOverride=net10.0-maccatalyst --configuration Debug
+else
+    echo "Building Client (Windows target)..."
+    dotnet build StoreExplorer.csproj -f net10.0-windows10.0.19041.0 --configuration Debug
+fi
 client_status=$?
 
 if [ $client_status -ne 0 ]; then

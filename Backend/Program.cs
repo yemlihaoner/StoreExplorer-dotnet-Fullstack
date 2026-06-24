@@ -1,9 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using StoreExplorer.Backend.Data;
 using StoreExplorer.Backend.Models;
@@ -12,7 +12,7 @@ using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuredJwtSigningKey = builder.Configuration["Jwt:SigningKey"];
+var configuredJwtSigningKey = builder.Configuration["Jwt:SigningKey"] ?? Environment.GetEnvironmentVariable("JWT_SIGNING_KEY");
 if (string.IsNullOrWhiteSpace(configuredJwtSigningKey))
 {
     if (builder.Environment.IsDevelopment())
@@ -22,7 +22,7 @@ if (string.IsNullOrWhiteSpace(configuredJwtSigningKey))
     }
     else
     {
-        throw new InvalidOperationException("Jwt:SigningKey must be configured in non-development environments.");
+        throw new InvalidOperationException("Jwt:SigningKey or JWT_SIGNING_KEY environment variable must be configured in non-development environments.");
     }
 }
 
@@ -137,11 +137,7 @@ app.MapPost("/api/auth/login", (LoginRequest request, UserAccountService account
 app.MapPost("/api/auth/forgot-password", (ForgotPasswordRequest request, UserAccountService accounts) =>
 {
     var result = accounts.InitiatePasswordReset(request.Email);
-    if (!result.IsSuccess)
-    {
-        return Results.NotFound(new { error = result.Error });
-    }
-    return Results.Ok(new { message = "Reset code generated for demo mode.", code = result.Code });
+    return Results.Ok(new { message = "If the email is registered, a reset code has been generated.", code = result.Code });
 });
 
 app.MapPost("/api/auth/reset-password", (ResetPasswordRequest request, UserAccountService accounts) =>
@@ -297,24 +293,27 @@ app.Run();
 static AuthResponse CreateAuthResponse(UserSummaryDto user, SymmetricSecurityKey signingKey)
 {
     var expiresAtUtc = DateTimeOffset.UtcNow.AddMinutes(30);
-    var claims = new List<Claim>
+    var claims = new Dictionary<string, object>
     {
-        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-        new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-        new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-        new(ClaimTypes.Email, user.Email),
-        new(ClaimTypes.Name, user.UserName)
+        [JwtRegisteredClaimNames.Sub] = user.Id.ToString(),
+        [JwtRegisteredClaimNames.Jti] = Guid.NewGuid().ToString("N"),
+        [ClaimTypes.NameIdentifier] = user.Id.ToString(),
+        [ClaimTypes.Email] = user.Email,
+        [ClaimTypes.Name] = user.UserName
     };
 
     var credentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
-    var jwt = new JwtSecurityToken(
-        issuer: "StoreExplorer.Backend",
-        audience: "StoreExplorer.Client",
-        claims: claims,
-        expires: expiresAtUtc.UtcDateTime,
-        signingCredentials: credentials);
+    var descriptor = new SecurityTokenDescriptor
+    {
+        Issuer = "StoreExplorer.Backend",
+        Audience = "StoreExplorer.Client",
+        Claims = claims,
+        Expires = expiresAtUtc.UtcDateTime,
+        SigningCredentials = credentials
+    };
 
-    var accessToken = new JwtSecurityTokenHandler().WriteToken(jwt);
+    var handler = new JsonWebTokenHandler();
+    var accessToken = handler.CreateToken(descriptor);
     return new AuthResponse(accessToken, expiresAtUtc, user);
 }
 

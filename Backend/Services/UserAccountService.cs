@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Net.Mail;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Identity;
 using StoreExplorer.Backend.Models;
 
@@ -152,7 +153,6 @@ public sealed class UserAccountService
     public bool TryChangePassword(Guid userId, ChangePasswordRequest request, out string? error)
     {
         error = null;
-
         if (!usersById.TryGetValue(userId, out var user))
         {
             error = "User not found.";
@@ -179,15 +179,19 @@ public sealed class UserAccountService
     public (bool IsSuccess, string? Error, string? Code) InitiatePasswordReset(string emailRaw)
     {
         var email = NormalizeEmail(emailRaw);
-        if (string.IsNullOrWhiteSpace(email) || !userIdByEmail.ContainsKey(email))
+        if (string.IsNullOrWhiteSpace(email))
         {
-            return (false, "User with this email was not found.", null);
+            return (false, "A valid email is required.", null);
         }
 
-        var rand = new Random();
-        var code = rand.Next(100000, 999999).ToString();
-        passwordResetCodes[email] = code;
+        var code = RandomNumberGenerator.GetInt32(100000, 1000000).ToString();
+        if (!userIdByEmail.ContainsKey(email))
+        {
+            // Return success with a generated code to prevent user enumeration
+            return (true, null, code);
+        }
 
+        passwordResetCodes[email] = code;
         return (true, null, code);
     }
 
@@ -198,7 +202,7 @@ public sealed class UserAccountService
 
         if (string.IsNullOrWhiteSpace(email) || !userIdByEmail.TryGetValue(email, out var userId) || !usersById.TryGetValue(userId, out var user))
         {
-            error = "User not found.";
+            error = "Invalid or expired reset code.";
             return false;
         }
 

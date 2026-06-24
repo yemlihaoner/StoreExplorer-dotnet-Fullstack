@@ -19,7 +19,7 @@ public sealed partial class StoreDetailViewModel : ObservableObject
     private string comment = string.Empty;
     private string reviewStatusMessage = string.Empty;
 
-    
+
 
     public StoreDto Store
     {
