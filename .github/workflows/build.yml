@@ -41,8 +41,8 @@ jobs:
         run: dotnet workload install maui --ignore-failed-sources
 
       - name: Restore Dependencies
-        run: dotnet restore StoreExplorer.csproj
+        run: dotnet restore StoreExplorer.csproj -p:TargetFramework=net10.0-windows10.0.19041.0 -r win-x64
 
       # Verify client build using the Windows desktop target as baseline
       - name: Build Client (Windows)
-        run: dotnet build StoreExplorer.csproj -f net10.0-windows10.0.19041.0 --configuration Release --no-restore
+        run: dotnet build StoreExplorer.csproj -f net10.0-windows10.0.19041.0 -r win-x64 --configuration Release --no-restore
