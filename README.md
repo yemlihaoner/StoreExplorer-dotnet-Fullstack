@@ -32,14 +32,18 @@ A .NET MAUI sample app with MVVM architecture, theme support, favorites, reviews
 
 We have preconfigured launch settings in `.vscode/launch.json` and tasks in `.vscode/tasks.json`. You can easily run and debug the projects from VS Code's **Run and Debug** view (`Ctrl+Shift+D`):
 
-1. **Launch Backend + MAUI App (Universal/MAUI)** (Recommended for macOS & Cross-Platform):
-   - Launches the API backend and starts the MAUI app using the active target framework you select.
-   - **For macOS Users**: Set your active target device in the VS Code status bar/device selector to **MacCatalyst** (or **iOS Simulator** / **Android Emulator**) and launch this compound configuration. Both the backend API and the client app will run concurrently under the debuggers.
+1. **Launch Backend + MAUI App (macOS Desktop + Browser)** (Recommended for macOS):
+   - One-click launch for local development on macOS.
+   - Starts the backend and opens its URL in your browser.
+   - Starts the MAUI desktop app with `dotnet run -f net10.0-maccatalyst`.
 2. **Launch Backend + MAUI App (Windows)** (Recommended for Windows Users):
-   - Launches the API backend and the MAUI Windows desktop application simultaneously with a single click.
-3. **Backend (.NET Core)**: Runs/debugs only the ASP.NET Core minimal API backend.
-4. **MAUI App (Windows)**: Runs/debugs only the client app targeting Windows desktop.
-5. **.NET MAUI: App (All Platforms)**: Runs/debugs the client app on your selected platform target (Android, iOS, macOS Catalyst, Windows) using the official .NET MAUI extension.
+   - Launches the API backend and the MAUI Windows desktop application simultaneously.
+3. **Backend (.NET Core)**:
+   - Runs/debugs only the ASP.NET Core minimal API backend.
+4. **MAUI App (macOS Catalyst CLI)**:
+   - Runs the MAUI app directly on macOS Catalyst using CLI.
+5. **MAUI App (Windows)**:
+   - Runs/debugs only the client app targeting Windows desktop.
 
 
 ## Running the Application from CLI
@@ -77,12 +81,12 @@ Run the app targeting your preferred platform:
 To ensure only successfully compiling and tested code is pushed to your remote repository, we have set up two guards:
 
 ### 1. GitHub Actions Pipeline (Remote Validation)
-A build pipeline is configured in [.github/workflows/build.yml](file:///C:/Development/MAUI/MyMAUIApp1/.github/workflows/build.yml). On every `push` and `pull_request` to the main branches, the workflow executes:
+A build pipeline is configured in [.github/workflows/build.yml](/Users/yemliha/Development/StoreExplorer-dotnet-Fullstack/.github/workflows/build.yml). On every `push` and `pull_request` to the main branches, the workflow executes:
 * **Linux Runner**: Automatically restores, runs the xUnit test suite (14 tests covering Login, Password Reset, duplicate registrations, and Favorites validation), and verifies the compiling of the Backend API.
 * **Windows Runner**: Automatically restores, installs the required .NET MAUI workloads, and verifies compiling of the client app targeting the Windows platform.
 
 ### 2. Local Push Guard (Git Pre-Push Hook)
-To prevent pushing failing code, a Git pre-push hook script is stored in the committed [.githooks/pre-push](file:///C:/Development/MAUI/MyMAUIApp1/.githooks/pre-push) folder.
+To prevent pushing failing code, a Git pre-push hook script is stored in [.githooks/pre-push](/Users/yemliha/Development/StoreExplorer-dotnet-Fullstack/.githooks/pre-push).
 
 This hook is configured **automatically** for all developers. The build system in `StoreExplorer.csproj` automatically registers this folder with Git (`git config core.hooksPath .githooks`) whenever the project is built.
 

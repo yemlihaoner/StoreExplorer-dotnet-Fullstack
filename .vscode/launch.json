@@ -29,9 +29,10 @@
             "stopAtEntry": false
         },
         {
-            "name": ".NET MAUI: App (All Platforms)",
-            "type": "maui",
-            "request": "launch"
+            "name": "MAUI App (macOS Catalyst CLI)",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "dotnet run --project \"${workspaceFolder}/StoreExplorer.csproj\" -f net10.0-maccatalyst"
         }
     ],
     "compounds": [
@@ -43,10 +44,10 @@
             ]
         },
         {
-            "name": "Launch Backend + MAUI App (Universal/MAUI)",
+            "name": "Launch Backend + MAUI App (macOS)",
             "configurations": [
                 "Backend (.NET Core)",
-                ".NET MAUI: App (All Platforms)"
+                "MAUI App (macOS Catalyst CLI)"
             ]
         }
     ]
